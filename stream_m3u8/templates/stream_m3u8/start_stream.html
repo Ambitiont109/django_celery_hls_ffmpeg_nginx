@@ -1,0 +1,51 @@
+{% load static %}
+<html>
+<head>
+    <title> Demo Stream Admin</title>
+    <link href="{% static 'bootstrap-4.0.0-beta-dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="container">
+<h3 style="margin-top: 30px;margin-bottom: 30px">
+    Admin Demo Stream (<a href="/live/hls/stream/index.m3u8">/live/hls/stream/index.m3u8</a>)
+</h3>
+{% if is_live %}
+
+    <form method="post" action="{% url 'stream_m3u8:stop_stream' %}">
+    {% csrf_token %}
+        <ul>
+            {% for url in url_list %}
+                <li>{{ url }}</li>
+            {% endfor %}
+        </ul>
+        <button type="submit" class="btn btn-primary">Stop</button>
+    </form>
+
+{% else %}
+    <form method="post">
+    {% csrf_token %}
+        <div class="form-group">
+            <label for="url1">URL 1</label>
+            <input name="url1" type="text" class="form-control" id="url1"
+                   placeholder="Input the stream url">
+            <small id="emailHelp" class="form-text text-muted">We'll concat the stream content into single stream</small>
+        </div>
+        <div class="form-group">
+            <label for="url2">URL 2</label>
+            <input name="url2" type="text" class="form-control" id="url2"
+                   placeholder="Input the stream url">
+        </div>
+        <div class="form-check">
+            <label for="url3">URL 3</label>
+            <input name="url3" type="text" class="form-control" id="url3"
+                   placeholder="Input the stream url">
+        </div>
+        <button type="submit" class="btn btn-primary">Start</button>
+    </form>
+{% endif %}
+</div>
+</body>
+<script src="{% static 'vendors/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap-4.0.0-beta-dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vendors/jquery.toast.min.js' %}"></script>
+</html>
