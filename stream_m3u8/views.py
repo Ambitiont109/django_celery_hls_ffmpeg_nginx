@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .tasks import stream_task
+from .tasks import stream_task, test_task
 # Create your views here.
 is_live = False
 url_list = []
@@ -11,10 +11,10 @@ class StartStreamView(View):
         global is_live
         if task is None:
             is_live = False
-        elif task.state == "SUCCESS":
-            is_live = False
-        else:
+        elif task.state == "PROGRESS" or task.state == "STARTED":
             is_live = True
+        else:
+            is_live = False
         if task is not None:
             print(task.state)
         context = {
@@ -32,13 +32,13 @@ class StartStreamView(View):
             request.POST.get("url3", "")
         ]
         task = stream_task.delay(url_list)
+        print(task.id)
         return redirect('stream_m3u8:start_stream')
 
 
 class StopStreamView(View):
     def post(self, request):
-        global is_live
-        is_live = False
+        global task
         task.revoke(terminate=True)
         return redirect('stream_m3u8:start_stream')
     # def post(self, request):
