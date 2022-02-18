@@ -23,7 +23,7 @@ def stream_task(self, url_list: []):
         # shell_command = f'''ffmpeg -re -i {url} -c copy -f flv rtmp://127.0.0.1/live/stream'''
         shell_command = f'''streamlink -O --http-header "User-Agent='Mozilla/5.0 \
         (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'" "hlsvariant://{url}" \
-        best | ffmpeg -i - -acodec aac -strict -2 -ab 48000 -ar 48000 -vcodec copy -f flv "rtmp://127.0.0.1/live/stream"\
+        best | ffmpeg -re -i - -acodec aac -strict -2 -ab 48000 -ar 48000 -vcodec copy -f flv "rtmp://127.0.0.1:443/live/stream"\
         '''
         logger.info(f"start stream from rtmp://127.0.0.1/live/stream with the content of {url}")
         logger.info(shell_command)
@@ -32,7 +32,7 @@ def stream_task(self, url_list: []):
         while proc.poll() is None:
             logger.info(f"streaming .....")
             time.sleep(2)
-        logger.inf("Wait next Url")
+        logger.info("Wait next Url")
         time.sleep(60)
 
 
